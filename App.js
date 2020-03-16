@@ -14,6 +14,8 @@ import {
 	Card,
 } from "react-native-paper";
 
+import SubjectsContainer from "./containers/SubjectsContainer";
+
 
 function Dummy() {
 	return (
@@ -30,15 +32,17 @@ const App = () => {
 	const [ pane, setPane ] = useState({
 		index: 0,
 		routes: [
-			{ key: "update", title: "Update", icon: "plus-circle" },
+			{ key: "add", title: "Add Classes", icon: "pencil-plus" },
 			{ key: "statistics", title: "Statistics", icon: "file-chart" },
 			{ key: "timetable", title: "Time Table", icon: "calendar-clock" },
+			{ key: "subjects", title: "Subjects", icon: "book-open" },
 		],
 	});
 	const renderScene = BottomNavigation.SceneMap({
-		update: Dummy,
+		add: Dummy,
 		statistics: Dummy,
 		timetable: Dummy,
+		subjects: SubjectsContainer,
 	});
 	return (
 		<>
