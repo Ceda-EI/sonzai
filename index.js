@@ -1,12 +1,15 @@
-/**
- * @format
- */
-
 import React from "react";
 import {AppRegistry} from "react-native";
 import App from "./App";
 import {name as appName} from "./app.json";
 import { DarkTheme, Provider } from "react-native-paper";
+import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+
+import configureStore from "./configureStore";
+const { store, persistor } = configureStore();
+console.log(store);
+console.log(persistor);
 
 const theme = {
 	...DarkTheme,
@@ -20,9 +23,13 @@ const theme = {
 
 export default function Main() {
 	return (
-		<Provider theme={theme}>
-			<App />
-		</Provider>
+		<ReduxProvider store={store}>
+			<PersistGate persistor={persistor}>
+				<Provider theme={theme}>
+					<App />
+				</Provider>
+			</PersistGate>
+		</ReduxProvider>
 	);
 }
 
