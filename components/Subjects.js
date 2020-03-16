@@ -4,6 +4,7 @@ import {
 	Button,
 	Card,
 	FAB,
+	Text
 } from "react-native-paper";
 
 import {
@@ -20,6 +21,10 @@ export default function Subjects({ subjects, addSubject, removeSubject }) {
 	}
 	return (
 		<>
+			{subjects.length === 0 ?
+				<Text style={style.text}>No Subjects added. Press + to add a subject.</Text>
+				: null
+			}
 			{subjects.map(subject => (
 				<Card key={subject.id} style={style.card}>
 					<Card.Title title={subject.name} />
@@ -62,5 +67,9 @@ Subjects.propTypes = {
 const style = StyleSheet.create({
 	card: {
 		marginTop: 12,
+	},
+	text: {
+		marginTop: 12,
+		textAlign: "center",
 	}
 });
