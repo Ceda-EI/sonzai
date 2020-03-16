@@ -8,16 +8,23 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import configureStore from "./configureStore";
 const { store, persistor } = configureStore();
-console.log(store);
-console.log(persistor);
 
 const theme = {
 	...DarkTheme,
 	mode: "exact",
 	colors: {
-		...DarkTheme.colors,
-		primary: "#e91e63",
-		accent: "#3f51b5",
+		primary: "#ededed",
+		accent: "#1a237e",
+		backdrop: "rgba(0, 0, 0, 0.5)",
+		background: "#000000",
+		disabled: "rgba(255, 255, 255, 0.38)",
+		error: "#CF6679",
+		notification: "#ff80ab",
+		onBackground: "#FFFFFF",
+		onSurface: "#FFFFFF",
+		placeholder: "rgba(255, 255, 255, 0.54)",
+		surface: "#121212",
+		text: "#ffffff"
 	}
 };
 
