@@ -13,3 +13,10 @@ export function removeSubject(id) {
 	};
 }
 
+
+export function setTheme(theme) {
+	return {
+		type: "SET_THEME",
+		theme: theme,
+	};
+}

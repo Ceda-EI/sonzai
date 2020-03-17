@@ -67,6 +67,8 @@ Subjects.propTypes = {
 const style = StyleSheet.create({
 	card: {
 		marginTop: 12,
+		marginLeft: 10,
+		marginRight: 10,
 	},
 	text: {
 		marginTop: 12,
