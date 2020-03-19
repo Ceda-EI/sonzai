@@ -4,10 +4,12 @@ import {
 	Button,
 	Card,
 	FAB,
+	Portal,
 	Text
 } from "react-native-paper";
 
 import {
+	ScrollView,
 	StyleSheet
 } from "react-native";
 
@@ -20,13 +22,23 @@ export default function Subjects({ subjects, addSubject, removeSubject }) {
 		setShowDialog(false);
 	}
 	return (
-		<>
+		<Portal.Host><ScrollView>
 			{subjects.length === 0 ?
-				<Text style={style.text}>No Subjects added. Press + to add a subject.</Text>
+				<Text style={style.text}>
+					No Subjects added. Press + to add a subject.
+				</Text>
 				: null
 			}
-			{subjects.map(subject => (
-				<Card key={subject.id} style={style.card}>
+			{subjects.map((subject, idx) => (
+				<Card
+					key={subject.id}
+					style={
+						[
+							style.card,
+							{marginBottom: idx === subjects.length - 1 ? 12 : 0 }
+						]
+					}
+				>
 					<Card.Title title={subject.name} />
 					<Card.Actions>
 						<Button onPress={() => removeSubject(subject.id)}>
@@ -43,18 +55,20 @@ export default function Subjects({ subjects, addSubject, removeSubject }) {
 				label="Subject Name"
 				onOK={onInput}
 			/>
-			<FAB
-				large
-				icon="plus"
-				onPress={() => setShowDialog(true)}
-				style={{
-					position: "absolute",
-					margin: 16,
-					right: 0,
-					bottom: 0,
-				}}
-			/>
-		</>
+			<Portal>
+				<FAB
+					large
+					icon="plus"
+					onPress={() => setShowDialog(true)}
+					style={{
+						position: "absolute",
+						margin: 16,
+						right: 0,
+						bottom: 0,
+					}}
+				/>
+			</Portal>
+		</ScrollView></Portal.Host>
 	);
 }
 
