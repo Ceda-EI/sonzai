@@ -152,6 +152,8 @@ android {
     }
     buildTypes {
         debug {
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-DEV"
             signingConfig signingConfigs.debug
         }
         release {
