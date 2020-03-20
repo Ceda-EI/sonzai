@@ -1,4 +1,6 @@
-export default function timetable(state) {
+import { v4 } from "react-native-uuid";
+
+export default function timetable(state, action) {
 	if (typeof state === "undefined")
 		// Array of days starting with Sunday
 		return [
@@ -10,5 +12,17 @@ export default function timetable(state) {
 			[],
 			[],
 		];
-	return state;
+	switch (action.type) {
+	case "ADD_TIMETABLE_ENTRY":
+		return [
+			...(state.slice(0, action.day)),
+			[...state[action.day], {
+				...action.entry,
+				id: v4()
+			}],
+			...(state.slice(action.day + 1))
+		];
+	default:
+		return state;
+	}
 }
