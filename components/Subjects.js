@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
-	Button,
+	IconButton,
 	Card,
 	FAB,
 	Portal,
-	Text
+	Text,
+	withTheme
 } from "react-native-paper";
 
 import {
@@ -15,7 +16,7 @@ import {
 
 import InputDialog from "./InputDialog";
 
-export default function Subjects({ subjects, addSubject, removeSubject }) {
+function Subjects({ theme, subjects, addSubject, removeSubject }) {
 	const [ showDialog, setShowDialog ] = useState(false);
 	function onInput(text) {
 		addSubject(text);
@@ -40,10 +41,12 @@ export default function Subjects({ subjects, addSubject, removeSubject }) {
 					}
 				>
 					<Card.Title title={subject.name} />
-					<Card.Actions>
-						<Button onPress={() => removeSubject(subject.id)}>
-							Remove
-						</Button>
+					<Card.Actions style={{justifyContent: "flex-end"}}>
+						<IconButton
+							onPress={() => removeSubject(subject.id)}
+							icon="delete"
+							color={theme.colors.primary}
+						/>
 					</Card.Actions>
 				</Card>
 			))}
@@ -76,6 +79,7 @@ Subjects.propTypes = {
 	subjects: PropTypes.array,
 	addSubject: PropTypes.func,
 	removeSubject: PropTypes.func,
+	theme: PropTypes.object,
 };
 
 const style = StyleSheet.create({
@@ -89,3 +93,5 @@ const style = StyleSheet.create({
 		textAlign: "center",
 	}
 });
+
+export default withTheme(Subjects);
