@@ -14,8 +14,10 @@ import {
 } from "react-native-paper";
 
 import { View, StatusBar, StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 
 import SubjectsContainer from "./containers/SubjectsContainer";
+import TimetableContainer from "./containers/TimetableContainer";
 import themes from "./themes";
 
 
@@ -41,6 +43,7 @@ function ThemePicker({ onPress, selectionIdx }) {
 					<View style={styles.radio}>
 						<RadioButton
 							status={selectionIdx === idx ? "checked": "unchecked"}
+							onPress={() => onPress(t, idx)}
 						/>
 						<Text>{t.name}</Text>
 					</View>
@@ -61,7 +64,7 @@ const App = ({ theme, setTheme }) => {
 		routes: [
 			{ key: "add", title: "Add Classes", icon: "pencil-plus" },
 			{ key: "statistics", title: "Statistics", icon: "file-chart" },
-			{ key: "timetable", title: "Time Table", icon: "calendar-clock" },
+			{ key: "timetable", title: "Timetable", icon: "timetable" },
 			{ key: "subjects", title: "Subjects", icon: "book-open" },
 		],
 	});
@@ -72,7 +75,7 @@ const App = ({ theme, setTheme }) => {
 	const renderScene = BottomNavigation.SceneMap({
 		add: Dummy,
 		statistics: Dummy,
-		timetable: Dummy,
+		timetable: TimetableContainer,
 		subjects: SubjectsContainer,
 	});
 
@@ -81,7 +84,7 @@ const App = ({ theme, setTheme }) => {
 		setTheme(theme.theme);
 	}
 	return (
-		<>
+		<NavigationContainer theme={theme}>
 			<StatusBar
 				backgroundColor={
 					theme.dark && theme.mode === "adaptive" ?
@@ -125,7 +128,7 @@ const App = ({ theme, setTheme }) => {
 					</Dialog>
 				</Portal>
 			</Provider>
-		</>
+		</NavigationContainer>
 	);
 };
 
