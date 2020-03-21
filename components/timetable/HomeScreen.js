@@ -13,6 +13,7 @@ import {
 	StyleSheet,
 	ScrollView
 } from "react-native";
+import { format } from "date-fns";
 
 function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 	return (<ScrollView>
@@ -31,8 +32,8 @@ function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 					{day.map((cls, idx) => {
 						const subject = subjects.find(i => i.id === cls.sub_id);
 						return (<View key={idx} style={style.class}>
+							<Text>{format(cls.start, "HH:mm")} to {format(cls.end, "HH:mm")}</Text>
 							<Text>{subject.name}</Text>
-							<Text>{cls.start} to {cls.end}</Text>
 							<Text>{cls.count}</Text>
 						</View>);
 					})}
