@@ -36,7 +36,7 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 					style={
 						[
 							style.card,
-							{marginBottom: idx === subjects.length - 1 ? 12 : 0 }
+							{marginBottom: idx === subjects.length - 1 ? 80 : 0 }
 						]
 					}
 				>

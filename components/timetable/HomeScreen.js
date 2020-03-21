@@ -10,13 +10,22 @@ import {
 
 import {
 	View,
-	StyleSheet
+	StyleSheet,
+	ScrollView
 } from "react-native";
 
 function HomeScreen({ theme, timetable, subjects, navigation, days }) {
-	return (<>
+	return (<ScrollView>
 		{timetable.map((day, dayIdx) => (
-			<Card key={dayIdx} style={style.card}>
+			<Card
+				key={dayIdx}
+				style={
+					[
+						style.card,
+						{marginBottom: dayIdx === 6 ? 80 : 0 }
+					]
+				}
+			>
 				<Card.Title title={days[dayIdx]} />
 				<Card.Content>
 					{day.map((cls, idx) => {
@@ -37,7 +46,7 @@ function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 				</Card.Actions>
 			</Card>
 		))}
-	</>);
+	</ScrollView>);
 }
 
 HomeScreen.propTypes = {
