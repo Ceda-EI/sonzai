@@ -15,6 +15,18 @@ import {
 } from "react-native";
 import { format } from "date-fns";
 
+function sortTimes(t1, t2) {
+	if (t1.getHours() > t2.getHours())
+		return 1;
+	if (t1.getHours() < t2.getHours())
+		return -1;
+	if (t1.getMinute() > t2.getMinute())
+		return 1;
+	if (t1.getMinute() < t2.getMinute())
+		return -1;
+	return 0;
+}
+
 function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 	return (<ScrollView>
 		{timetable.map((day, dayIdx) => (
@@ -29,7 +41,7 @@ function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 			>
 				<Card.Title title={days[dayIdx]} />
 				<Card.Content>
-					{day.map((cls, idx) => {
+					{[...day].sort((i, j) => sortTimes(i.start, j.start)).map((cls, idx) => {
 						const subject = subjects.find(i => i.id === cls.sub_id);
 						return (<View key={idx} style={style.class}>
 							<Text>{format(cls.start, "HH:mm")} to {format(cls.end, "HH:mm")}</Text>
