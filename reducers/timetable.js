@@ -22,6 +22,8 @@ export default function timetable(state, action) {
 			}],
 			...(state.slice(action.day + 1))
 		];
+	case "REMOVE_TIMETABLE_ENTRY":
+		return state.map(i => i.filter(j => j.id !== action.id));
 	default:
 		return state;
 	}

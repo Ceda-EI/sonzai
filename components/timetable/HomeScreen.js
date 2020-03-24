@@ -1,15 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 
 import {
+	Button,
 	IconButton,
 	Card,
-	Text,
+	DataTable,
+	Dialog,
+	Portal,
 	withTheme,
 } from "react-native-paper";
 
 import {
-	View,
 	StyleSheet,
 	ScrollView
 } from "react-native";
@@ -27,8 +29,9 @@ function sortTimes(t1, t2) {
 	return 0;
 }
 
-function HomeScreen({ theme, timetable, subjects, navigation, days }) {
-	return (<ScrollView>
+function HomeScreen({ days, navigation, removeTimetableEntry, subjects, theme, timetable }) {
+	const [ dialog, setDialog ] = useState({ show: false, id: null });
+	return (<Portal.Host><ScrollView>
 		{timetable.map((day, dayIdx) => (
 			<Card
 				key={dayIdx}
@@ -41,14 +44,60 @@ function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 			>
 				<Card.Title title={days[dayIdx]} />
 				<Card.Content>
-					{[...day].sort((i, j) => sortTimes(i.start, j.start)).map((cls, idx) => {
-						const subject = subjects.find(i => i.id === cls.sub_id);
-						return (<View key={idx} style={style.class}>
-							<Text>{format(cls.start, "HH:mm")} to {format(cls.end, "HH:mm")}</Text>
-							<Text>{subject.name}</Text>
-							<Text>{cls.count}</Text>
-						</View>);
-					})}
+					<DataTable>
+						<DataTable.Header>
+							<DataTable.Title
+								style={{ flexGrow: 2 }}
+							>
+								Course
+							</DataTable.Title>
+							<DataTable.Title
+								style={{ flexGrow: 1 }}
+							>
+								From
+							</DataTable.Title>
+							<DataTable.Title
+								style={{ flexGrow: 1 }}
+							>
+								To
+							</DataTable.Title>
+							<DataTable.Title
+								style={{ flexGrow: 1 }}
+							>
+								Count
+							</DataTable.Title>
+						</DataTable.Header>
+						{[...day].sort((i, j) => sortTimes(i.start, j.start)).map((cls, idx) => {
+							const subject = subjects.find(i => i.id === cls.sub_id);
+							return (
+								<DataTable.Row
+									key={idx}
+									onPress={() => setDialog({ show: true, id: cls.id })}
+								>
+									<DataTable.Cell
+										style={{ flexGrow: 2 }}
+									>
+										{subject.name}
+									</DataTable.Cell>
+									<DataTable.Cell
+										style={{ flexGrow: 1 }}
+									>
+										{format(cls.start, "HH:mm")}
+									</DataTable.Cell>
+									<DataTable.Cell
+										style={{ flexGrow: 1 }}
+									>
+										{format(cls.end, "HH:mm")}
+									</DataTable.Cell>
+									<DataTable.Cell
+										style={{ flexGrow: 1 }}
+									>
+										{cls.count}
+									</DataTable.Cell>
+								</DataTable.Row>
+							);
+						})}
+					</DataTable>
 				</Card.Content>
 				<Card.Actions style={{justifyContent: "flex-end"}}>
 					<IconButton
@@ -59,7 +108,25 @@ function HomeScreen({ theme, timetable, subjects, navigation, days }) {
 				</Card.Actions>
 			</Card>
 		))}
-	</ScrollView>);
+		<Portal>
+			<Dialog
+				visible={dialog.show}
+				onDismiss={() => setDialog({ show: false, id: null })}>
+				<Dialog.Title>Remove Entry?</Dialog.Title>
+				<Dialog.Actions>
+					<Button onPress={() => setDialog({ show: false, id: null })}>Cancel</Button>
+					<Button
+						onPress={() => {
+							setDialog({ show: false, id: null });
+							removeTimetableEntry(dialog.id);
+						}}
+					>
+						Remove
+					</Button>
+				</Dialog.Actions>
+			</Dialog>
+		</Portal>
+	</ScrollView></Portal.Host>);
 }
 
 HomeScreen.propTypes = {
@@ -68,6 +135,7 @@ HomeScreen.propTypes = {
 	navigation: PropTypes.object,
 	days: PropTypes.array,
 	theme: PropTypes.object,
+	removeTimetableEntry: PropTypes.func,
 };
 
 const style = StyleSheet.create({

@@ -10,7 +10,7 @@ import AddEntry from "./timetable/AddEntry";
 
 const Stack = createStackNavigator();
 
-export default function Timetable({ addTimetableEntry, timetable, subjects }) {
+export default function Timetable({ addTimetableEntry, removeTimetableEntry, timetable, subjects }) {
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	return (
 		<Portal.Host><Stack.Navigator headerMode="none">
@@ -21,6 +21,7 @@ export default function Timetable({ addTimetableEntry, timetable, subjects }) {
 						timetable={timetable}
 						subjects={subjects}
 						days={days}
+						removeTimetableEntry={removeTimetableEntry}
 					/>
 				)}
 			</Stack.Screen>
