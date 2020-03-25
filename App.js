@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
 	Appbar,
-	BottomNavigation,
 	Text,
 	Card,
 	Dialog,
@@ -15,6 +14,7 @@ import {
 
 import { View, StatusBar, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 
 import SubjectsContainer from "./containers/SubjectsContainer";
 import TimetableContainer from "./containers/TimetableContainer";
@@ -72,7 +72,7 @@ const App = ({ theme, setTheme }) => {
 	const [ newTheme, setNewTheme ] = useState(themes.findIndex(
 		i => JSON.stringify(i.theme) === JSON.stringify(theme)
 	));
-	const renderScene = BottomNavigation.SceneMap({
+	const renderScene = SceneMap({
 		add: Dummy,
 		statistics: Dummy,
 		timetable: TimetableContainer,
@@ -102,7 +102,7 @@ const App = ({ theme, setTheme }) => {
 						onPress={() => setShowDialog(true)}
 					/>
 				</Appbar.Header>
-				<BottomNavigation
+				<TabView
 					navigationState={pane}
 					onIndexChange={(index) => setPane({
 						index,
@@ -110,6 +110,18 @@ const App = ({ theme, setTheme }) => {
 					})}
 					renderScene={renderScene}
 					shifting={true}
+					renderTabBar={props => (
+						<TabBar
+							{...props}
+							style={{
+								backgroundColor: theme.dark && theme.mode === "adaptive" ?
+									theme.colors.surface :
+									theme.colors.primary,
+								color: theme.colors.text,
+							}}
+						/>)
+					}
+					tabBarPosition="bottom"
 				/>
 				<Portal>
 					<Dialog
