@@ -23,7 +23,7 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 		setShowDialog(false);
 	}
 	return (
-		<Portal.Host><ScrollView>
+		<Portal.Host><ScrollView style={{ backgroundColor: theme.colors.background }}>
 			{subjects.length === 0 ?
 				<Text style={style.text}>
 					No Subjects added. Press + to add a subject.
