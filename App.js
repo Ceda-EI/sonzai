@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Color from "color";
 import PropTypes from "prop-types";
 import {
 	Appbar,
@@ -9,12 +10,14 @@ import {
 	Button,
 	Provider,
 	RadioButton,
-	TouchableRipple
+	TouchableRipple,
+	overlay,
 } from "react-native-paper";
 
-import { View, StatusBar, StyleSheet } from "react-native";
+import { View, StatusBar, StyleSheet, Text as RNText } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import SubjectsContainer from "./containers/SubjectsContainer";
 import TimetableContainer from "./containers/TimetableContainer";
@@ -59,6 +62,27 @@ ThemePicker.propTypes = {
 };
 
 const App = ({ theme, setTheme }) => {
+
+	function renderLabel({ route, focused, color }) {
+		return <RNText style={{color: focused ? color : backgroundColor}}>{route.title}</RNText>;
+	}
+
+	renderLabel.propTypes = {
+		route: PropTypes.object,
+		focused: PropTypes.bool,
+		color: PropTypes.string,
+	};
+
+	function renderIcon({ route, color }) {
+		return (
+			<View>
+				<Icon name={route.icon} color={color} size={20}/>
+			</View>
+		);
+	}
+
+	renderIcon.propTypes = renderLabel.propTypes;
+
 	const [ pane, setPane ] = useState({
 		index: 0,
 		routes: [
@@ -79,6 +103,12 @@ const App = ({ theme, setTheme }) => {
 		subjects: SubjectsContainer,
 	});
 
+	const backgroundColor = theme.dark && theme.mode === "adaptive" ?
+		overlay(4, theme.colors.surface):
+		theme.colors.primary;
+
+	const activeColor = Color(backgroundColor).isLight() ? "#000" : "#FFF";
+	const inactiveColor = Color(backgroundColor).isLight() ? "#222" : "#AAA";
 	function dialogSelection(theme, idx) {
 		setNewTheme(idx);
 		setTheme(theme.theme);
@@ -86,11 +116,7 @@ const App = ({ theme, setTheme }) => {
 	return (
 		<NavigationContainer theme={theme}>
 			<StatusBar
-				backgroundColor={
-					theme.dark && theme.mode === "adaptive" ?
-						theme.colors.surface :
-						theme.colors.primary
-				}
+				backgroundColor={backgroundColor}
 			/>
 			<Provider theme={theme}>
 				<Appbar.Header>
@@ -110,18 +136,23 @@ const App = ({ theme, setTheme }) => {
 					})}
 					renderScene={renderScene}
 					shifting={true}
+					tabBarPosition="bottom"
 					renderTabBar={props => (
 						<TabBar
 							{...props}
 							style={{
-								backgroundColor: theme.dark && theme.mode === "adaptive" ?
-									theme.colors.surface :
-									theme.colors.primary,
-								color: theme.colors.text,
+								backgroundColor: backgroundColor,
 							}}
+							activeColor={activeColor}
+							inactiveColor={inactiveColor}
+							renderLabel={renderLabel}
+							renderIcon={renderIcon}
+							renderIndicator={() => null}
 						/>)
 					}
-					tabBarPosition="bottom"
+					sceneContainerStyle={{
+						backgroundColor: theme.colors.background
+					}}
 				/>
 				<Portal>
 					<Dialog
