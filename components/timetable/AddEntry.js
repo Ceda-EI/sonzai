@@ -47,19 +47,22 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 	}
 
 	function submit() {
-		if (subject.id === null) {
-			setSnackbar({ visible: true, message: "Missing subject." });
-			return;
-		} else if (start === null) {
-			setSnackbar({ visible: true, message: "Missing start time." });
-			return;
-		} else if (end === null) {
-			setSnackbar({ visible: true, message: "Missing end time." });
-			return;
-		} else if (count === 0) {
-			setSnackbar({ visible: true, message: "Missing count." });
+		let message = "";
+		if (subject.id === null)
+			message = "Missing Subject";
+		else if (start === null)
+			message =  "Missing start time.";
+		else if (end === null)
+			message =  "Missing end time.";
+		else if (count === 0)
+			message =  "Missing count.";
+
+		if (message !== "") {
+			setSnackbar({visible: true, message: message});
+			setTimeout(() => setSnackbar({ visible: false, message: null }), 2000);
 			return;
 		}
+
 		addTimetableEntry(day, {
 			sub_id: subject.id,
 			count,
