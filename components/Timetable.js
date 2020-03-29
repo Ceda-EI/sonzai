@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {
 	Portal,
+	Text,
 } from "react-native-paper";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -12,6 +13,17 @@ const Stack = createStackNavigator();
 
 export default function Timetable({ addTimetableEntry, removeTimetableEntry, timetable, subjects }) {
 	const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+	if (subjects.length === 0) {
+		return (
+			<Text
+				style={{
+					textAlign: "center",
+					marginTop: 12,
+				}}
+			>
+				No Subjects added. Add Subjects first.
+			</Text>);
+	}
 	return (
 		<Portal.Host><Stack.Navigator headerMode="none">
 			<Stack.Screen name="Timetable">
