@@ -9,6 +9,26 @@ import {
 
 export default function InputDialog({ visible, onOK, onDismiss, title, label, placeholder }) {
 	const [ text, setText ] = useState("");
+	const [ error, setError ] = useState(false);
+
+	function onChangeText(text) {
+		setText(text);
+		setError(text === "");
+	}
+
+	function onCancel() {
+		onDismiss();
+		setText("");
+	}
+
+	function onDone() {
+		if (text === "") {
+			setError(true);
+			return;
+		}
+		onOK(text);
+		setText("");
+	}
 	return (
 		<Portal>
 			<Dialog
@@ -20,13 +40,14 @@ export default function InputDialog({ visible, onOK, onDismiss, title, label, pl
 						label={label}
 						placeholder={placeholder}
 						value={text}
-						onChangeText={text => setText(text)}
+						onChangeText={onChangeText}
 						mode="outlined"
+						error={error}
 					/>
 				</Dialog.Content>
 				<Dialog.Actions>
-					<Button onPress={() => {onDismiss(); setText("");}}>Cancel</Button>
-					<Button onPress={() => {onOK(text); setText("");}}>OK</Button>
+					<Button onPress={onCancel}>Cancel</Button>
+					<Button onPress={onDone}>Done</Button>
 				</Dialog.Actions>
 			</Dialog>
 		</Portal>
