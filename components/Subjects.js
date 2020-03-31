@@ -5,6 +5,7 @@ import {
 	Card,
 	FAB,
 	Portal,
+	Snackbar,
 	Text,
 	withTheme
 } from "react-native-paper";
@@ -16,11 +17,20 @@ import {
 
 import InputDialog from "./InputDialog";
 
-function Subjects({ theme, subjects, addSubject, removeSubject }) {
+function Subjects({ theme, subjects, timetable, addSubject, removeSubject }) {
 	const [ showDialog, setShowDialog ] = useState(false);
+	const [ snackbar, setSnackbar ] = useState(false);
 	function onInput(text) {
 		addSubject(text);
 		setShowDialog(false);
+	}
+	function deleteSubject(id) {
+		if (timetable.reduce((acc, val) => acc.concat(val), []).filter(i => i.sub_id === id).length){
+			setSnackbar(true);
+			setTimeout(() => setSnackbar(false), 2000);
+			return;
+		}
+		removeSubject(id);
 	}
 	return (
 		<Portal.Host><ScrollView style={{ backgroundColor: theme.colors.background }}>
@@ -43,7 +53,7 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 					<Card.Title title={subject.name} />
 					<Card.Actions style={{justifyContent: "flex-end"}}>
 						<IconButton
-							onPress={() => removeSubject(subject.id)}
+							onPress={() => deleteSubject(subject.id)}
 							icon="delete"
 							color={theme.colors.primary}
 						/>
@@ -63,6 +73,7 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 					large
 					icon="plus"
 					onPress={() => setShowDialog(true)}
+					visible={!snackbar}
 					style={{
 						position: "absolute",
 						margin: 16,
@@ -70,6 +81,16 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 						bottom: 0,
 					}}
 				/>
+				<Snackbar
+					visible={snackbar}
+					onDismiss={() => setSnackbar(false)}
+					action={{
+						label: "Dismiss",
+						onPress: () => setSnackbar(false),
+					}}
+				>
+					Subject is in use in TimeTable.
+				</Snackbar>
 			</Portal>
 		</ScrollView></Portal.Host>
 	);
@@ -77,6 +98,7 @@ function Subjects({ theme, subjects, addSubject, removeSubject }) {
 
 Subjects.propTypes = {
 	subjects: PropTypes.array,
+	timetable: PropTypes.array,
 	addSubject: PropTypes.func,
 	removeSubject: PropTypes.func,
 	theme: PropTypes.object,

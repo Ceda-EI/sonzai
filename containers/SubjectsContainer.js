@@ -5,6 +5,7 @@ import { addSubject, removeSubject } from "../actions";
 const mapStateToProps = state => {
 	return {
 		subjects: state.subjects,
+		timetable: state.timetable,
 	};
 };
 
