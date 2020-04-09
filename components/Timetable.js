@@ -37,19 +37,16 @@ export default function Timetable({ addTimetableEntry, removeTimetableEntry, tim
 					/>
 				)}
 			</Stack.Screen>
-			{days.map((day, idx) => (
-				<Stack.Screen name={`New Entry ${day}`} key={idx}>
-					{(props) => (
-						<AddEntry
-							{...props}
-							subjects={subjects}
-							day={idx}
-							days={days}
-							addTimetableEntry={addTimetableEntry}
-						/>
-					)}
-				</Stack.Screen>
-			))}
+			<Stack.Screen name="New Entry">
+				{(props) => (
+					<AddEntry
+						{...props}
+						subjects={subjects}
+						days={days}
+						addTimetableEntry={addTimetableEntry}
+					/>
+				)}
+			</Stack.Screen>
 		</Stack.Navigator></Portal.Host>
 	);
 }

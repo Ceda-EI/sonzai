@@ -3,12 +3,11 @@ import PropTypes from "prop-types";
 
 import {
 	Button,
-	IconButton,
 	Card,
 	DataTable,
 	Dialog,
+	FAB,
 	Portal,
-	withTheme,
 } from "react-native-paper";
 
 import {
@@ -22,14 +21,14 @@ function sortTimes(t1, t2) {
 		return 1;
 	if (t1.getHours() < t2.getHours())
 		return -1;
-	if (t1.getMinute() > t2.getMinute())
+	if (t1.getMinutes() > t2.getMinutes())
 		return 1;
-	if (t1.getMinute() < t2.getMinute())
+	if (t1.getMinutes() < t2.getMinutes())
 		return -1;
 	return 0;
 }
 
-function HomeScreen({ days, navigation, removeTimetableEntry, subjects, theme, timetable }) {
+function HomeScreen({ days, navigation, removeTimetableEntry, subjects, timetable }) {
 	const [ dialog, setDialog ] = useState({ show: false, id: null });
 	return (<Portal.Host><ScrollView>
 		{timetable.map((day, dayIdx) => (
@@ -99,13 +98,6 @@ function HomeScreen({ days, navigation, removeTimetableEntry, subjects, theme, t
 						})}
 					</DataTable>
 				</Card.Content>
-				<Card.Actions style={{justifyContent: "flex-end"}}>
-					<IconButton
-						onPress={() => navigation.navigate(`New Entry ${days[dayIdx]}`)}
-						icon="plus"
-						color={theme.colors.primary}
-					/>
-				</Card.Actions>
 			</Card>
 		))}
 		<Portal>
@@ -125,6 +117,17 @@ function HomeScreen({ days, navigation, removeTimetableEntry, subjects, theme, t
 					</Button>
 				</Dialog.Actions>
 			</Dialog>
+			<FAB
+				loarge
+				icon="plus"
+				onPress={() => navigation.navigate("New Entry")}
+				style={{
+					position: "absolute",
+					margin: 16,
+					right: 0,
+					bottom: 0,
+				}}
+			/>
 		</Portal>
 	</ScrollView></Portal.Host>);
 }
@@ -134,7 +137,6 @@ HomeScreen.propTypes = {
 	subjects: PropTypes.array,
 	navigation: PropTypes.object,
 	days: PropTypes.array,
-	theme: PropTypes.object,
 	removeTimetableEntry: PropTypes.func,
 };
 
@@ -154,4 +156,4 @@ const style = StyleSheet.create({
 	},
 });
 
-export default withTheme(HomeScreen);
+export default HomeScreen;

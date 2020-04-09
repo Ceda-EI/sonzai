@@ -1,20 +1,24 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
-	IconButton,
 	Card,
 	FAB,
+	IconButton,
 	List,
 	Menu,
 	Portal,
 	Snackbar,
 	TextInput,
+	ToggleButton,
 } from "react-native-paper";
-import {StyleSheet} from "react-native";
+import {
+	StyleSheet,
+	View
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 
-function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
+function AddEntry({addTimetableEntry, days, subjects, navigation }) {
 	const [ subject, setSubject ] = useState({ id: null, name: null });
 	const [ showSubjectMenu, setShowSubjectMenu ] = useState(false);
 	const [ showTimePicker, setShowTimePicker ] = useState(false);
@@ -24,6 +28,7 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 	const [ end, setEnd ] = useState(null);
 	const [ count, setCount ] = useState(0);
 	const [ snackbar, setSnackbar ] = useState({ visible: false, message: "" });
+	const [ dayStates, setDayStates ] = useState([ true, false, false, false, false, false, false ]);
 	function parseCount(text) {
 		const num = parseInt(text);
 		if (isNaN(num))
@@ -56,6 +61,8 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 			message =  "Missing end time.";
 		else if (count === 0)
 			message =  "Missing count.";
+		if (! dayStates.filter(i => i).length)
+			message = "No day selected.";
 
 		if (message !== "") {
 			setSnackbar({visible: true, message: message});
@@ -63,11 +70,16 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 			return;
 		}
 
-		addTimetableEntry(day, {
-			sub_id: subject.id,
-			count,
-			start,
-			end
+
+		dayStates.forEach((i, idx) => {
+			if (i) {
+				addTimetableEntry(idx, {
+					sub_id: subject.id,
+					count,
+					start,
+					end
+				});
+			}
 		});
 		navigation.pop();
 	}
@@ -76,7 +88,7 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 	return (<>
 		<IconButton icon="arrow-left" onPress={() => navigation.pop()}/>
 		<Card style={style.card}>
-			<Card.Title title={`Add Class on ${days[day]}`} />
+			<Card.Title title="Add Class" />
 			<Card.Content>
 				<List.Section>
 					<Menu
@@ -127,6 +139,26 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 						value={count === 0 ? "" : count.toString()}
 						onChangeText={parseCount}
 					/>
+					<View
+						style={style.daysContainer}
+					>
+						{dayStates.map( (i, idx) => (
+							<ToggleButton
+								key={idx}
+								icon={`alpha-${days[idx][0].toLowerCase()}`}
+								status={i ? "checked": "unchecked"}
+								onPress={
+									() =>
+										setDayStates([
+											...dayStates.slice(0, idx),
+											!i,
+											...dayStates.slice(idx + 1)
+										])
+								}
+							/>
+						)
+						)}
+					</View>
 				</List.Section>
 			</Card.Content>
 		</Card>
@@ -171,9 +203,8 @@ function AddEntry({addTimetableEntry, days, day, subjects, navigation }) {
 AddEntry.propTypes = {
 	addTimetableEntry: PropTypes.func,
 	subjects: PropTypes.array,
-	navigation: PropTypes.object,
 	days: PropTypes.array,
-	day: PropTypes.number,
+	navigation: PropTypes.object,
 };
 
 const style = StyleSheet.create({
@@ -189,6 +220,11 @@ const style = StyleSheet.create({
 	class: {
 		flexDirection: "row",
 		justifyContent: "space-between"
+	},
+	daysContainer: {
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+		marginTop: 10
 	},
 });
 
