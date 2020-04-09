@@ -1,13 +1,13 @@
 import { DefaultTheme, DarkTheme } from "react-native-paper";
 export default [
 	{
-		"name": "Dark: Pink and Gray",
+		"name": "Dark: Pink and Blue",
 		"theme": {
 			...DarkTheme,
 			mode: "exact",
 			colors: {
 				primary: "#ff1744",
-				accent: "#e0e0e0",
+				accent: "#3949ab",
 				backdrop: "rgba(0, 0, 0, 0.5)",
 				background: "#000000",
 				disabled: "rgba(255, 255, 255, 0.38)",
@@ -64,17 +64,6 @@ export default [
 		}
 	},
 	{
-		"name": "Absolute Dark: Pink and Gray",
-		"theme": {
-			...DarkTheme,
-			colors: {
-				...DarkTheme.colors,
-				primary: "#ff1744",
-				accent: "#e0e0e0",
-			}
-		}
-	},
-	{
 		"name": "Absolute Dark: Purple and Gray",
 		"theme": DarkTheme
 	},
@@ -97,17 +86,6 @@ export default [
 			colors: {
 				...DefaultTheme.colors,
 				primary: "#ef9a9a",
-				accent: "#fce4ec",
-			}
-		}
-	},
-	{
-		"name": "Light: Pastel Colors 2",
-		"theme": {
-			...DefaultTheme,
-			colors: {
-				...DefaultTheme.colors,
-				primary: "#ffcccb",
 				accent: "#fce4ec",
 			}
 		}
