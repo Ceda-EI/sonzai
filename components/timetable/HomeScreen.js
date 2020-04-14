@@ -8,6 +8,7 @@ import {
 	Dialog,
 	FAB,
 	Portal,
+	Modal,
 } from "react-native-paper";
 
 import {
@@ -15,6 +16,8 @@ import {
 	ScrollView
 } from "react-native";
 import { format } from "date-fns";
+
+import BottomSheet from "reanimated-bottom-sheet";
 
 function sortTimes(t1, t2) {
 	if (t1.getHours() > t2.getHours())
@@ -30,6 +33,32 @@ function sortTimes(t1, t2) {
 
 function HomeScreen({ days, navigation, removeTimetableEntry, subjects, timetable }) {
 	const [ dialog, setDialog ] = useState({ show: false, id: null });
+	const [ currentBottomSheet, setCurrentBottomSheet ] = useState(null);
+
+	this.bs = React.createRef();
+	const openBottomSheet = () => {this.bs.current.snapTo(0);this.bs.current.snapTo(0);};
+	const closeBottomSheet = () => {this.bs.current.snapTo(2);this.bs.current.snapTo(2);};
+
+	function CardContents() {
+		if (!currentBottomSheet) {
+			return <></>;
+		}
+		const subject = subjects.find(i => i.id === currentBottomSheet.sub_id);
+		return (
+			<Card>
+				<Card.Title title={subject.name} />
+				<Card.Content style={style.bottomNavigation}>
+					<Button mode="contained">Change Subject</Button>
+					<Button mode="contained">Change Start Time</Button>
+					<Button mode="contained">Change End Time</Button>
+					<Button mode="contained" onPress={() => {
+						closeBottomSheet();
+						setDialog({ show: true, id: currentBottomSheet.name });
+					}}>Remove</Button>
+				</Card.Content>
+			</Card>
+		);
+	}
 	return (<Portal.Host><ScrollView>
 		{timetable.map((day, dayIdx) => (
 			<Card
@@ -71,7 +100,10 @@ function HomeScreen({ days, navigation, removeTimetableEntry, subjects, timetabl
 							return (
 								<DataTable.Row
 									key={idx}
-									onPress={() => setDialog({ show: true, id: cls.id })}
+									onPress={() => {
+										setCurrentBottomSheet(cls);
+										openBottomSheet();
+									}}
 								>
 									<DataTable.Cell
 										style={{ flexGrow: 2 }}
@@ -118,7 +150,8 @@ function HomeScreen({ days, navigation, removeTimetableEntry, subjects, timetabl
 				</Dialog.Actions>
 			</Dialog>
 			<FAB
-				loarge
+				visible={currentBottomSheet == null}
+				large
 				icon="plus"
 				onPress={() => navigation.navigate("New Entry")}
 				style={{
@@ -127,6 +160,21 @@ function HomeScreen({ days, navigation, removeTimetableEntry, subjects, timetabl
 					right: 0,
 					bottom: 0,
 				}}
+			/>
+			<Modal
+				visible={currentBottomSheet != null}
+				onDismiss={closeBottomSheet}
+				dismissable={false}
+			>
+			</Modal>
+			<BottomSheet
+				ref={this.bs}
+				snapPoints={[300, 150, 0]}
+				initialSnap={1}
+				renderContent={CardContents}
+				enabledInnerScrolling={false}
+				onCloseStart={() => setCurrentBottomSheet(null)}
+				onCloseEnd={() => {}}
 			/>
 		</Portal>
 	</ScrollView></Portal.Host>);
@@ -153,6 +201,11 @@ const style = StyleSheet.create({
 	class: {
 		flexDirection: "row",
 		justifyContent: "space-between"
+	},
+	bottomNavigation: {
+		height: 250,
+		flexDirection: "column",
+		justifyContent: "space-evenly",
 	},
 });
 
